@@ -299,6 +299,10 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
+-- Grep search, but with a custom script to allow specifying a file type
+vim.keymap.set('n', '<leader>sG', require('telescopesetup').live_grep_in_glob,
+  { desc = '[S]search by [Grep] with glob (file type)' })
+
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
@@ -542,5 +546,8 @@ map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
 map('n', '<F4>', ':cnext<CR>')
 map('n', '<F5>', ':cprev<CR>')
 
+--
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+--
