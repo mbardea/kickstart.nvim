@@ -178,6 +178,12 @@ require('lazy').setup({
     },
   },
 
+  "phha/zenburn.nvim",
+  "https://github.com/sainnhe/everforest",
+  "savq/melange-nvim",
+  "/sainnhe/sonokai",
+  "EdenEast/nightfox.nvim",
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -297,7 +303,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir', 'heex' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -520,6 +526,21 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+local function map(mode, lhs, rhs, opts)
+  local options = { noremap = true, silent = true }
+  if opts then
+    options = vim.tbl_extend('force', options, opts)
+  end
+  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+
+map('n', '<leader>et', ':NvimTreeToggle<CR>', { desc = "Toggle NvimTree" })
+map('n', '<leader>ef', ':NvimTreeFindFile<CR>', { desc = "Sync file in NvimTree" })
+map('n', '<leader>es', ':NvimTreeFocus<CR>', { desc = "Focus NvimeTree" })
+map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
+map('n', '<F4>', ':cnext<CR>')
+map('n', '<F5>', ':cprev<CR>')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
