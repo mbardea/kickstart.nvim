@@ -183,6 +183,47 @@ require('lazy').setup({
   "savq/melange-nvim",
   "/sainnhe/sonokai",
   "EdenEast/nightfox.nvim",
+  "ellisonleao/gruvbox.nvim",
+  "ajmwagar/vim-deus",
+  "tomasr/molokai",
+  "NLKNguyen/papercolor-theme",
+  -- "nyoom-engineering/nyoom.nvim",
+
+  {
+    'rmagatti/auto-session',
+    config = function()
+      require("auto-session").setup {
+        log_level = "error",
+        auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+      }
+    end
+  },
+  {
+    "kylechui/nvim-surround",
+    tag = "v2.0.0", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  },
+
+  -- -- ChatGPt
+  -- { "MunifTanjim/nui.nvim" },
+  -- {
+  --   "jackMort/ChatGPT.nvim",
+  --   config = function()
+  --     require("chatgpt").setup({
+  --       -- optional configuration
+  --     })
+  --   end,
+  --   requires = {
+  --     "MunifTanjim/nui.nvim",
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-telescope/telescope.nvim"
+  --   }
+  -- },
+
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -214,7 +255,9 @@ vim.o.hlsearch = true
 vim.wo.number = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
+-- Disable mouse
+vim.o.mouse = ''
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -275,6 +318,9 @@ require('telescope').setup {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
       },
+      n = {
+        ['<c-d>'] = require('telescope.actions').delete_buffer
+      },
     },
   },
 }
@@ -314,7 +360,7 @@ vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir', 'heex' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir', 'heex', 'yaml' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -452,12 +498,11 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-
+  clangd = {},
+  gopls = {},
+  pyright = {},
+  rust_analyzer = {},
+  tsserver = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
