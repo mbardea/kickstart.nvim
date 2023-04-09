@@ -187,7 +187,12 @@ require('lazy').setup({
   "ajmwagar/vim-deus",
   "tomasr/molokai",
   "NLKNguyen/papercolor-theme",
+  "liuchengxu/space-vim-dark",
   -- "nyoom-engineering/nyoom.nvim",
+  --
+  {
+    'github/copilot.vim',
+  },
 
   {
     'rmagatti/auto-session',
@@ -206,6 +211,15 @@ require('lazy').setup({
         -- Configuration here, or leave empty to use defaults
       })
     end
+  },
+  {
+    'nvim-tree/nvim-web-devicons',
+  },
+  {
+    'sindrets/diffview.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+    }
   },
 
   -- -- ChatGPt
@@ -243,7 +257,7 @@ require('lazy').setup({
 }, {})
 
 -- @mb LSP autoformat on save
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync()]]
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -346,11 +360,12 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]earch [F]iles' })
-vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]earch [H]elp' })
-vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]earch current [W]ord' })
-vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]earch by [G]rep' })
-vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
+vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
 
 -- Grep search, but with a custom script to allow specifying a file type
 vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
@@ -597,6 +612,9 @@ map('n', '<leader>es', ':NvimTreeFocus<CR>', { desc = "Focus NvimeTree" })
 map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
 map('n', '<F4>', ':cnext<CR>')
 map('n', '<F5>', ':cprev<CR>')
+
+vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
+-- vim.o.grepformat = add('%f:%l:%c:%m', vim.o.grepformat)
 
 --
 -- The line beneath this is called `modeline`. See `:help modeline`
