@@ -64,7 +64,13 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
+  --
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      require('leap').add_default_mappings()
+    end
+  },
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -146,11 +152,9 @@ require('lazy').setup({
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    -- See `:help ibl`
+    main = 'ibl',
+    opts = {},
   },
 
   -- "gc" to comment visual regions/lines
@@ -250,10 +254,22 @@ require('lazy').setup({
     }
   },
 
+  'vim-test/vim-test',
+
+  -- {
+  --   "klen/nvim-test",
+  --   config = function()
+  --     require('nvim-test').setup()
+  --   end
+  -- },
+  --
   {
-    "klen/nvim-test",
-    config = function()
-      require('nvim-test').setup()
+    'glacambre/firenvim',
+    -- Lazy load firenvim
+    -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+    lazy = not vim.g.started_by_firenvim,
+    build = function()
+      vim.fn["firenvim#install"](0)
     end
   },
 
@@ -374,6 +390,11 @@ require('telescope').setup {
       },
     },
   },
+  pickers = {
+    colorscheme = {
+      enable_preview = true
+    }
+  }
 }
 
 -- Enable telescope fzf native, if installed
@@ -414,6 +435,9 @@ require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir', 'heex',
     'yaml' },
+  sync_install = false,
+  ignore_install = {},
+  modules = {},
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -647,6 +671,7 @@ map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
 map('n', '<F4>', ':cprev<CR>')
 map('n', '<F5>', ':cnext<CR>')
 
+vim.o.guifont = "Hack:h10"
 vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
 -- vim.o.grepformat = add('%f:%l:%c:%m', vim.o.grepformat)
 
