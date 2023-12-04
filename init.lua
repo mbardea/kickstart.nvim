@@ -65,12 +65,20 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
   --
-  {
-    'ggandor/leap.nvim',
-    config = function()
-      require('leap').add_default_mappings()
-    end
-  },
+  -- {
+  --   'ggandor/leap.nvim',
+  --   config = function()
+  --     require('leap').add_default_mappings()
+  --   end
+  -- },
+  --
+  -- {
+  --   'simrat39/symbols-outline.nvim',
+  --   config = function()
+  --     require("symbols-outline").setup()
+  --   end
+  -- },
+  --
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -210,18 +218,16 @@ require('lazy').setup({
     },
   },
 
-  "phha/zenburn.nvim",
-  "https://github.com/sainnhe/everforest",
-  "savq/melange-nvim",
-  "/sainnhe/sonokai",
-  "EdenEast/nightfox.nvim",
-  "ellisonleao/gruvbox.nvim",
-  "ajmwagar/vim-deus",
-  "tomasr/molokai",
-  "NLKNguyen/papercolor-theme",
-  "liuchengxu/space-vim-dark",
-  -- "nyoom-engineering/nyoom.nvim",
-  --
+  -- "phha/zenburn.nvim",
+  -- "https://github.com/sainnhe/everforest",
+  -- "savq/melange-nvim",
+  -- "/sainnhe/sonokai",
+  -- "EdenEast/nightfox.nvim",
+  -- "ellisonleao/gruvbox.nvim",
+  -- "ajmwagar/vim-deus",
+  -- "tomasr/molokai",
+  -- "NLKNguyen/papercolor-theme",
+  -- "liuchengxu/space-vim-dark",
   {
     'github/copilot.vim',
   },
@@ -235,6 +241,7 @@ require('lazy').setup({
       }
     end
   },
+
   {
     "kylechui/nvim-surround",
     tag = "v2.0.0", -- Use for stability; omit to use `main` branch for the latest features
@@ -254,7 +261,13 @@ require('lazy').setup({
     }
   },
 
-  'vim-test/vim-test',
+  -- {
+  --   'vim-test/vim-test',
+  --   config = function()
+  --     vim.g['test#strategy'] = 'neovim'
+  --     vim.g['test#neovim#start_normal'] = 1
+  --   end
+  -- },
 
   -- {
   --   "klen/nvim-test",
@@ -308,8 +321,8 @@ require('lazy').setup({
 }, {})
 
 -- @mb LSP autoformat on save
--- vim.cmd [[autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync()]]
--- vim.cmd [[autocmd BufWritePre *.go lua vim.lsp.buf.format()]]
+-- vim.cmd [[autocmd Buf'ritePre *.go lua vim.lsp.buf.formatting_sync()]]
+-- vim.cmd [[autocmd Buf'ritePre *.go lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 -- [[ Setting options ]]
