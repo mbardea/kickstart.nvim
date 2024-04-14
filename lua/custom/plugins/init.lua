@@ -12,7 +12,15 @@ return {
 	{
 		'ggandor/leap.nvim',
 		config = function()
-			require('leap').add_default_mappings()
+			require('leap').setup {
+				safe_labels = {}, -- label the first match as well. It is confusing when the first match is not labelled.
+			}
+			-- require('leap').add_default_mappings()
+			vim.keymap.set('n', 'f', '<Plug>(leap-forward-to)', { desc = "Leap forward" })
+			vim.keymap.set('n', 'F', '<Plug>(leap-backward-to)', { desc = "Leap backward" })
+
+
+			vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
 		end
 	},
 	{
@@ -41,4 +49,37 @@ return {
 			}
 		end
 	},
+	-- {
+	-- 	-- show function parameter completion from LSP (not working yet)
+	-- 	'hrsh7th/cmp-nvim-lsp-signature-help',
+	-- 	config = function()
+	-- 		require 'cmp'.setup {
+	-- 			sources = {
+	-- 				{ name = 'nvim_lsp_signature_help' }
+	-- 			}
+	-- 		}
+	-- 	end
+	-- },
+	{
+		"ray-x/lsp_signature.nvim",
+		event = "VeryLazy",
+		opts = {},
+		config = function(_, opts) require 'lsp_signature'.setup(opts) end
+	},
+	{
+		"vimwiki/vimwiki",
+		init = function()
+			vim.g.vimwiki_list = {
+				{
+					path = '~/Dropbox/vimwiki',
+					syntax = 'default',
+					ext = '.wiki',
+				},
+			}
+		end,
+	},
+	{
+		'github/copilot.vim',
+	},
+
 }

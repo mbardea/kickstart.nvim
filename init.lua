@@ -86,6 +86,12 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- neodev must be installed before lspconfig
+  {
+    "folke/neodev.nvim",
+    opts = {},
+  },
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -228,10 +234,6 @@ require('lazy').setup({
   -- "tomasr/molokai",
   -- "NLKNguyen/papercolor-theme",
   -- "liuchengxu/space-vim-dark",
-  {
-    'github/copilot.vim',
-  },
-
   {
     'rmagatti/auto-session',
     config = function()
@@ -446,7 +448,7 @@ vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir', 'heex',
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'elixir', 'heex',
     'yaml' },
   sync_install = false,
   ignore_install = {},
@@ -681,8 +683,8 @@ map('n', '<leader>et', ':NvimTreeToggle<CR>', { desc = "Toggle NvimTree" })
 map('n', '<leader>ef', ':NvimTreeFindFile<CR>', { desc = "Sync file in NvimTree" })
 map('n', '<leader>es', ':NvimTreeFocus<CR>', { desc = "Focus NvimeTree" })
 map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
-map('n', '<F4>', ':cprev<CR>')
-map('n', '<F5>', ':cnext<CR>')
+map('n', '<F4>', ':cprev<CR>zz')
+map('n', '<F5>', ':cnext<CR>zz')
 
 vim.o.guifont = "Hack:h10"
 vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
@@ -781,4 +783,8 @@ function on_attach_nvim_tree(bufnr)
   --
   -- You will need to insert "your code goes here" for any mappings with a custom action_cb
   vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
+end
+
+if vim.g.neovide then
+  vim.g.neovide_cursor_trail_size = 0.2
 end
