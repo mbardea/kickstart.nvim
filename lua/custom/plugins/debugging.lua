@@ -29,6 +29,7 @@ return {
 			vim.keymap.set("n", "<Leader>dc", ":DapContinue<CR>")
 			vim.keymap.set("n", "<Leader>dx", ":DapTerminate<CR>")
 			vim.keymap.set("n", "<Leader>do", ":DapStepOver<CR>")
+			vim.keymap.set("n", "<Leader>di", ":DapStepInto<CR>")
 
 			require("neodev").setup({
 				library = { plugins = { "nvim-dap-ui" }, types = true },
