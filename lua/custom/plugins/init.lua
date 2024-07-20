@@ -2,7 +2,6 @@ return {
 	"phha/zenburn.nvim",
 	"https://github.com/sainnhe/everforest",
 	"savq/melange-nvim",
-	"/sainnhe/sonokai",
 	"EdenEast/nightfox.nvim",
 	"ellisonleao/gruvbox.nvim",
 	"ajmwagar/vim-deus",
@@ -81,5 +80,7 @@ return {
 	{
 		'github/copilot.vim',
 	},
-
+	{
+		'https://github.com/virchau13/tree-sitter-astro',
+	},
 }

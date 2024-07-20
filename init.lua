@@ -123,7 +123,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',          opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -172,10 +172,17 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',         opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    'nvim-telescope/telescope.nvim',
+    version = '*',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope-live-grep-args.nvim'
+    }
+  },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -409,7 +416,15 @@ require('telescope').setup {
     colorscheme = {
       enable_preview = true
     }
-  }
+  },
+  config = function()
+    local telescope = require("telescope")
+
+    telescope.setup({
+    })
+
+    telescope.load_extension("live_grep_args")
+  end
 }
 
 -- Enable telescope fzf native, if installed
@@ -435,14 +450,20 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
-vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
-vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
+vim.keymap.set('n', '<leader>fW', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fG', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
 
--- Grep search, but with a custom script to allow specifying a file type
-vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
-  { desc = '[F]ind by [G]rep with glob (file type)' })
+-- -- Grep search, but with a custom script to allow specifying a file type
+-- vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
+--   { desc = '[F]ind by [G]rep with glob (file type)' })
+
+vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
+local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
+vim.keymap.set("n", "<leader>fw", live_grep_args_shortcuts.grep_word_under_cursor)
+vim.keymap.set("v", "<leader>fg", live_grep_args_shortcuts.grep_visual_selection)
+
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -711,6 +732,7 @@ vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
 --   "Mappings migrated" are correct
 --
 -- Please see https://github.com/nvim-tree/nvim-tree.lua/wiki/Migrating-To-on_attach for assistance in migrating.
+--
 --
 
 function on_attach_nvim_tree(bufnr)
