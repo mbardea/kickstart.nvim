@@ -76,25 +76,52 @@ return {
 				},
 			}
 		end,
+
 	},
 	{
-		'github/copilot.vim',
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		---@module "ibl"
+		---@type ibl.config
+		opts = {},
 	},
+	{
+		"github/copilot.vim",
+		event = "InsertEnter",
+		config = function()
+			-- Optional: enable for markdown explicitly
+			vim.g.copilot_filetypes = {
+				markdown = true,
+			}
+
+			-- Optional: remap <Tab> to accept Copilot suggestions
+			vim.api.nvim_set_keymap("i", "<Tab>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+			-- alternative keybinding for accepting suggestions
+			vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', {
+				expr = true,
+				silent = true,
+			})
+		end,
+	},
+	-- {
+	-- 	'github/copilot.vim',
+	--
+	-- },
 	{
 		'https://github.com/virchau13/tree-sitter-astro',
 	},
-	{
-		"CopilotC-Nvim/CopilotChat.nvim",
-		dependencies = {
-			{ "github/copilot.vim" },  -- or zbirenbaum/copilot.lua
-			{ "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-		},
-		build = "make tiktoken",           -- Only on MacOS or Linux
-		opts = {
-			-- See Configuration section for options
-		},
-		-- See Commands section for default commands if you want to lazy load on them
-	},
+	-- {
+	-- 	"CopilotC-Nvim/CopilotChat.nvim",
+	-- 	dependencies = {
+	-- 		{ "github/copilot.vim" },  -- or zbirenbaum/copilot.lua
+	-- 		{ "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+	-- 	},
+	-- 	build = "make tiktoken",           -- Only on MacOS or Linux
+	-- 	opts = {
+	-- 		-- See Configuration section for options
+	-- 	},
+	-- 	-- See Commands section for default commands if you want to lazy load on them
+	-- },
 
 	{
 		'stevearc/quicker.nvim',
@@ -120,6 +147,48 @@ return {
 				},
 
 			})
+		end,
+	},
+	{
+		"kiyoon/treesitter-indent-object.nvim",
+		keys = {
+			{
+				"ai",
+				function() require 'treesitter_indent_object.textobj'.select_indent_outer() end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer)",
+			},
+			{
+				"aI",
+				function() require 'treesitter_indent_object.textobj'.select_indent_outer(true) end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer, line-wise)",
+			},
+			{
+				"ii",
+				function() require 'treesitter_indent_object.textobj'.select_indent_inner() end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, partial range)",
+			},
+			{
+				"iI",
+				function() require 'treesitter_indent_object.textobj'.select_indent_inner(true, 'V') end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, entire range) in line-wise visual mode",
+			},
+		},
+	},
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		tag = "v2.20.8", -- Use v2
+		event = "BufReadPost",
+		config = function()
+			vim.opt.list = true
+			require("indent_blankline").setup {
+				space_char_blankline = " ",
+				show_current_context = true,
+				show_current_context_start = true,
+			}
 		end,
 	},
 
