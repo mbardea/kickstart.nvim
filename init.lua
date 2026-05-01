@@ -32,7 +32,7 @@ are first encountering a few different constructs in your nvim config.
 
 I hope you enjoy your Neovim journey,
 - TJ
-
+--
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
 -- Set <space> as the leader key
@@ -177,7 +177,8 @@ require('lazy').setup({
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
-    version = '*',
+    -- version = '*',
+    -- tag = '0.1.x', -- 0.1.x is the latest stable release, anything else breaks LSP in nvim 0.11
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-live-grep-args.nvim'
@@ -270,21 +271,6 @@ require('lazy').setup({
     }
   },
 
-  -- {
-  --   'vim-test/vim-test',
-  --   config = function()
-  --     vim.g['test#strategy'] = 'neovim'
-  --     vim.g['test#neovim#start_normal'] = 1
-  --   end
-  -- },
-
-  -- {
-  --   "klen/nvim-test",
-  --   config = function()
-  --     require('nvim-test').setup()
-  --   end
-  -- },
-  --
   {
     'glacambre/firenvim',
     -- Lazy load firenvim
@@ -294,22 +280,6 @@ require('lazy').setup({
       vim.fn["firenvim#install"](0)
     end
   },
-
-  -- -- ChatGPt
-  -- { "MunifTanjim/nui.nvim" },
-  -- {
-  --   "jackMort/ChatGPT.nvim",
-  --   config = function()
-  --     require("chatgpt").setup({
-  --       -- optional configuration
-  --     })
-  --   end,
-  --   requires = {
-  --     "MunifTanjim/nui.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "nvim-telescope/telescope.nvim"
-  --   }
-  -- },
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -386,6 +356,8 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+vim.keymap.set("n", "<C-Tab>", "<C-^>", { desc = "Switch to last buffer" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -470,7 +442,7 @@ vim.keymap.set("v", "<leader>fg", live_grep_args_shortcuts.grep_visual_selection
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'elixir', 'heex',
-    'yaml' },
+    'yaml', 'json' },
   sync_install = false,
   ignore_install = {},
   modules = {},
@@ -535,71 +507,50 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- require("nvim-tree").setup({
---   sort_by = "case_sensitive",
---   view = {
---     width = 50,
---     on_attach = on_attach_nvim_tree,
---   },
---   renderer = {
---     group_empty = true,
---   },
---   filters = {
---     dotfiles = true,
---   },
--- })
-
-
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
--- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
--- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
--- LSP settings.
---  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
-    end
+local builtin = require("telescope.builtin")
 
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+
+local nmap = function(keys, func, desc)
+  if desc then
+    desc = 'LSP: ' .. desc
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-  -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-
-  -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
 end
+
+-- remove default Mappings. We want to use Telescope instead.
+vim.keymap.del('n', 'grr')
+vim.keymap.del('n', 'grt')
+vim.keymap.del('n', 'gri')
+vim.keymap.del('n', 'gra')
+vim.keymap.del('n', 'grn')
+
+-- key mappings
+nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+nmap('gd', builtin.lsp_definitions, '[G]oto [D]efinition')
+nmap('gr', builtin.lsp_references, '[G]oto [R]eferences')
+nmap('gI', builtin.lsp_implementations, '[G]oto [I]mplementation')
+nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+nmap('<leader>ds', builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
+nmap('<leader>ws', builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+-- See `:help K` for why this keymap
+nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+-- Lesser used LSP functionality
+nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+nmap('<leader>wl', function()
+  print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, '[W]orkspace [L]ist Folders')
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -637,15 +588,57 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-    }
+-- local lspconfig = require("lspconfig")
+-- for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
+--   lspconfig[server].setup({})
+-- end
+
+-- mb: adding this as global, as it does not seem to be working from the function below
+vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, { desc = "LSP Type Definition" })
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = "LSP Implementation" })
+
+local on_attach = function(_, bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+
+  vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+  vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+  vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+  vim.keymap.set("n", "gt", builtin.lsp_type_definitions, opts)
+
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+  vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+end
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+local lspconfig = require("lspconfig")
+
+local mlsp = require('mason-lspconfig')
+for _, server in ipairs(mlsp.get_installed_servers()) do
+  vim.lsp.config(server, {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  })
+  vim.lsp.enable(server) -- or skip this if you keep automatic_enable=true
+end
+
+
+-- Prevent duplicate gopls clients
+vim.lsp.config('gopls', {
+  -- lspconfig.gopls.setup({
+  on_attach = function(client, bufnr)
+    -- Prevent duplicate clients
+    for _, existing_client in pairs(vim.lsp.get_clients()) do
+      if existing_client.name == client.name and existing_client.id ~= client.id then
+        vim.lsp.stop_client(client.id)
+        return
+      end
+    end
+    -- Your normal on_attach logic here
   end,
-}
+})
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
@@ -703,7 +696,7 @@ end
 map('n', '<leader>et', ':NvimTreeToggle<CR>', { desc = "Toggle NvimTree" })
 map('n', '<leader>ef', ':NvimTreeFindFile<CR>', { desc = "Sync file in NvimTree" })
 map('n', '<leader>es', ':NvimTreeFocus<CR>', { desc = "Focus NvimeTree" })
-map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
+--map('n', '<BS>', '<C-^>', { desc = "Go to most recently used buffer" })
 map('n', '<F4>', ':cprev<CR>zz')
 map('n', '<F5>', ':cnext<CR>zz')
 
