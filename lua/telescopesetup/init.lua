@@ -18,10 +18,11 @@ require("telescope").setup {
 	defaults = {
 		buffer_previewer_maker = largeFilesIgnoringPreviewer,
 		wrap_results = true,
-		sorting_strategy = "ascending",
+		sorting_strategy = "descending",
 		file_ignore_patterns = { ".git/" }
 	},
 	pickers = {
+		sorting_strategy = "descending",
 		oldfiles = { initial_mode = "normal", },
 		find_files = { hidden = true, },
 		git_files = { show_untracked = true }
