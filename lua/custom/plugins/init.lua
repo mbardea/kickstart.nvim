@@ -1,4 +1,7 @@
 return {
+	"catppuccin/nvim",
+	"rose-pine/neovim",
+	"rebelot/kanagawa.nvim",
 	"phha/zenburn.nvim",
 	"https://github.com/sainnhe/everforest",
 	"savq/melange-nvim",
@@ -9,14 +12,15 @@ return {
 	"NLKNguyen/papercolor-theme",
 	"liuchengxu/space-vim-dark",
 	{
-		'ggandor/leap.nvim',
+		url = "https://codeberg.org/andyg/leap.nvim",
+		--		'ggandor/leap.nvim',
 		config = function()
 			require('leap').setup {
 				safe_labels = {}, -- label the first match as well. It is confusing when the first match is not labelled.
 			}
 			-- require('leap').add_default_mappings()
-			vim.keymap.set('n', 'f', '<Plug>(leap-forward-to)', { desc = "Leap forward" })
-			vim.keymap.set('n', 'F', '<Plug>(leap-backward-to)', { desc = "Leap backward" })
+			vim.keymap.set('n', 'f', '<Plug>(leap-forward)', { desc = "Leap forward" })
+			vim.keymap.set('n', 'F', '<Plug>(leap-backward)', { desc = "Leap backward" })
 
 
 			vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
