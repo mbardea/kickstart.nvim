@@ -136,6 +136,24 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+
+        map('n', ']h', function() gs.next_hunk() end, { desc = 'Next hunk' })
+        map('n', '[h', function() gs.prev_hunk() end, { desc = 'Prev hunk' })
+
+        map('n', '<leader>hs', gs.stage_hunk, { desc = 'Stage hunk' })
+        map('n', '<leader>hr', gs.reset_hunk, { desc = 'Reset hunk' })
+        map('n', '<leader>hp', gs.preview_hunk, { desc = 'Preview hunk' })
+        map('n', '<leader>hb', function() gs.blame_line { full = true } end, { desc = 'Blame line' })
+        map('n', '<leader>hd', gs.diffthis, { desc = 'Diff this' })
+      end,
     },
   },
 
@@ -426,6 +444,7 @@ vim.keymap.set('n', '<leader>fW', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>fG', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
+vim.keymap.set('n', '<leader>hf', require('telescope.builtin').git_status, { desc = '[H]unk [F]ind modified files' })
 
 -- -- Grep search, but with a custom script to allow specifying a file type
 -- vim.keymap.set('n', '<leader>fG', require('telescopesetup').live_grep_in_glob,
